@@ -1,0 +1,39 @@
+{
+  "generator-jhipster": {
+    "additionalSubGenerators": "",
+    "baseName": "react-antd",
+    "cli": true,
+    "entities": [],
+    "generators": {
+      "angular": {
+        "command": false,
+        "priorities": ["writing"],
+        "sbs": true,
+        "written": true
+      },
+      "client": {
+        "command": false,
+        "priorities": ["writing"],
+        "sbs": true,
+        "written": true
+      },
+      "react": {
+        "command": false,
+        "priorities": ["writing"],
+        "sbs": true,
+        "written": true
+      },
+      "vue": {
+        "command": false,
+        "priorities": ["writing"],
+        "sbs": true,
+        "written": true
+      }
+    },
+    "jhipsterVersion": "8.0.0-rc.1",
+    "localBlueprint": false,
+    "sampleWritten": true,
+    "skipCommitHook": true,
+    "subGenerators": ["angular", "client", "react", "vue"]
+  }
+}

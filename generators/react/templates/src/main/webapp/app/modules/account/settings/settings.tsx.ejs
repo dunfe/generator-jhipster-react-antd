@@ -17,8 +17,8 @@
  limitations under the License.
 -%>
 import React, { useEffect } from 'react';
-import { Button, Col, Row } from 'reactstrap';
-import { Translate, translate, ValidatedField, ValidatedForm, isEmail } from 'react-jhipster';
+import { Button, Input, Form, Select, Row, Col, Typography } from 'antd';
+import { Translate, translate } from 'react-jhipster';
 import { toast } from 'react-toastify';
 
 <%_ if (enableTranslation) { _%>
@@ -28,6 +28,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
 import { saveAccountSettings, reset } from './settings.reducer';
 
+const { Title} = Typography;
 export const SettingsPage = () => {
   const dispatch = useAppDispatch();
   const account = useAppSelector(state => state.authentication.account);
@@ -59,72 +60,98 @@ export const SettingsPage = () => {
     );
   };
 
+  const options = locales.map(locale => {
+    return {
+      label: languages[locale].name,
+      value: locale,
+    };
+  });
+
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="settings-title">
+          <Title id="settings-title">
             <Translate contentKey="settings.title" interpolate={{ username: account.login }}>
               User settings for {account.login}
             </Translate>
-          </h2>
-          <ValidatedForm id="settings-form" onSubmit={handleValidSubmit} defaultValues={account}>
-            <ValidatedField
+          </Title>
+          <Form layout={'vertical'} id="settings-form" onFinish={handleValidSubmit} initialValues={account}>
+            <Form.Item
               name="firstName"
               label={translate('settings.form.firstname')}
               id="firstName"
-              placeholder={translate('settings.form.firstname.placeholder')}
-              validate={{
-                required: { value: true, message: translate('settings.messages.validate.firstname.required') },
-                minLength: { value: 1, message: translate('settings.messages.validate.firstname.minlength') },
-                maxLength: { value: 50, message: translate('settings.messages.validate.firstname.maxlength') },
-              }}
-              data-cy="firstname"
-            />
-            <ValidatedField
+              rules={[
+                {
+                  required: true,
+                  message: translate('settings.messages.validate.firstname.required'),
+                },
+                {
+                  min: 1,
+                  message: translate('settings.messages.validate.firstname.minlength'),
+                },
+                {
+                  max: 50,
+                  message: translate('settings.messages.validate.firstname.maxlength'),
+                },
+              ]}
+            >
+              <Input placeholder={translate('settings.form.firstname.placeholder')} />
+            </Form.Item>
+            <Form.Item
               name="lastName"
               label={translate('settings.form.lastname')}
               id="lastName"
-              placeholder={translate('settings.form.lastname.placeholder')}
-              validate={{
-                required: { value: true, message: translate('settings.messages.validate.lastname.required') },
-                minLength: { value: 1, message: translate('settings.messages.validate.lastname.minlength') },
-                maxLength: { value: 50, message: translate('settings.messages.validate.lastname.maxlength') },
-              }}
-              data-cy="lastname"
-            />
-            <ValidatedField
+              rules={[
+                {
+                  required: true,
+                  message: translate('settings.messages.validate.lastname.required'),
+                },
+                {
+                  min: 1,
+                  message: translate('settings.messages.validate.lastname.minlength'),
+                },
+                {
+                  max: 50,
+                  message: translate('settings.messages.validate.lastname.maxlength'),
+                },
+              ]}
+            >
+              <Input placeholder={translate('settings.form.lastname.placeholder')} />
+            </Form.Item>
+            <Form.Item
               name="email"
               label={translate('global.form.email.label')}
-              placeholder={translate('global.form.email.placeholder')}
-              type="email"
-              validate={{
-                required: { value: true, message: translate('global.messages.validate.email.required') },
-                minLength: { value: 5, message: translate('global.messages.validate.email.minlength') },
-                maxLength: { value: 254, message: translate('global.messages.validate.email.maxlength') },
-                validate: v => isEmail(v) || translate('global.messages.validate.email.invalid'),
-              }}
-              data-cy="email"
-            />
-<%_ if (enableTranslation) { _%>
-            <ValidatedField
-              type="select"
-              id="langKey"
-              name="langKey"
-              label={translate('settings.form.language')}
-              data-cy="langKey"
+              rules={[
+                {
+                  required: true,
+                  message: translate('global.messages.validate.email.required'),
+                },
+                {
+                  min: 5,
+                  message: translate('settings.messages.validate.lastname.minlength'),
+                },
+                {
+                  max: 254,
+                  message: translate('settings.messages.validate.email.maxlength'),
+                },
+                {
+                  type: 'email',
+                  message: translate('global.messages.validate.email.invalid'),
+                },
+              ]}
             >
-              {locales.map(locale => (
-                <option value={locale} key={locale}>
-                  {languages[locale].name}
-                </option>
-              ))}
-            </ValidatedField>
-<%_ } _%>
-            <Button color="primary" type="submit" data-cy="submit">
-              <Translate contentKey="settings.form.button">Save</Translate>
-            </Button>
-          </ValidatedForm>
+              <Input placeholder={translate('global.form.email.placeholder')} />
+            </Form.Item>
+            <Form.Item id="langKey" name="langKey" label={translate('settings.form.language')} data-cy="langKey">
+              <Select id="langKey" options={options} />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                <Translate contentKey="settings.form.button">Save</Translate>
+              </Button>
+            </Form.Item>
+          </Form>
         </Col>
       </Row>
     </div>

@@ -17,30 +17,40 @@
  limitations under the License.
 -%>
 import React, { useEffect } from 'react';
-import { Link,  useSearchParams } from 'react-router-dom';
-import { Row, Col, Alert } from 'reactstrap';
-import { Translate } from 'react-jhipster';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { Row, Col, Button, Result } from 'antd';
+import { Translate, getUrlParameter } from 'react-jhipster';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { activateAction, reset } from './activate.reducer';
 
 const successAlert = (
-  <Alert color="success">
-    <Translate contentKey="activate.messages.success">
-      <strong>Your user account has been activated.</strong> Please
-    </Translate>
-    <Link to="/login" className="alert-link">
-      <Translate contentKey="global.messages.info.authenticated.link">sign in</Translate>
-    </Link>.
-  </Alert>
+  <Result
+    status="success"
+    title={
+      <Translate contentKey="activate.messages.success">
+        <strong>Your user account has been activated.</strong> Please
+      </Translate>
+    }
+    extra={[
+      <Button key={'signin'} type={'primary'}>
+        <Link to="/login" className="alert-link">
+          <Translate contentKey="global.messages.info.authenticated.link">sign in</Translate>
+        </Link>
+      </Button>,
+    ]}
+  />
 );
 
 const failureAlert = (
-  <Alert color="danger">
-    <Translate contentKey="activate.messages.error">
-      <strong>Your user could not be activated.</strong> Please use the registration form to sign up.
-    </Translate>
-  </Alert>
+  <Result
+    status="warning"
+    title={
+      <Translate contentKey="activate.messages.error">
+        <strong>Your user could not be activated.</strong> Please use the registration form to sign up.
+      </Translate>
+    }
+  />
 );
 
 export const ActivatePage = () => {
@@ -61,8 +71,8 @@ export const ActivatePage = () => {
 
   return (
     <div>
-      <Row className="justify-content-center">
-        <Col md="8">
+      <Row justify="center">
+        <Col span="8">
           <h1>
             <Translate contentKey="activate.title">Activation</Translate>
           </h1>

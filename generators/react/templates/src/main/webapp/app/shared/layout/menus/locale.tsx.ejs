@@ -17,17 +17,29 @@
  limitations under the License.
 -%>
 import React from 'react';
-import { DropdownItem } from 'reactstrap';
-import { NavDropdown } from './menu-components';
 import { locales, languages } from 'app/config/translation';
+import { Menu } from 'antd';
+import { useAppDispatch } from 'app/config/store';
+import { Storage } from 'react-jhipster';
+import { setLocale } from 'app/shared/reducers/locale';
 
-export const LocaleMenu = ({ currentLocale, onClick }: { currentLocale: string; onClick: (event: any) => void }) =>
-  Object.keys(languages).length > 1 ? (
-    <NavDropdown icon="flag" name={(currentLocale ? languages[currentLocale].name : undefined)}>
-      {locales.map(locale => (
-        <DropdownItem key={locale} value={locale} onClick={onClick}>
-          {languages[locale].name}
-        </DropdownItem>
-      ))}
-    </NavDropdown>
-  ) : null;
+interface IProps {
+    currentLocale: string;
+}
+
+export const LocaleMenu = (props: IProps) => {
+    const dispatch = useAppDispatch();
+
+    const handleLocaleChange = ({ key }) => {
+        const langKey = key;
+        Storage.session.set('locale', langKey);
+        dispatch(setLocale(langKey));
+    };
+
+    const items = locales.map(locale => <Menu.Item key={locale}>{languages[locale].name}</Menu.Item>);
+    return (
+        <Menu onClick={handleLocaleChange} selectedKeys={[props.currentLocale]}>
+            {items}
+        </Menu>
+    );
+};

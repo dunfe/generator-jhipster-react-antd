@@ -17,7 +17,7 @@
  limitations under the License.
 -%>
 import React, { useState, useEffect } from 'react';
-import { Table, Input, Row, Col, Badge } from 'reactstrap';
+import { Input, Row, Col, Tag } from 'antd';
 import { Translate } from 'react-jhipster';
 
 import { getConfigurations, getEnv } from '../administration.reducer';
@@ -51,9 +51,9 @@ export const ConfigurationPage = () => {
       .map((v: any) => v.beans)
       .reduce((acc, e) => ({ ...acc, ...e }));
 
-  const configProps = configuration?.configProps ?? {};
+  const configProps = configuration && configuration.configProps ? configuration.configProps : {};
 
-  const env = configuration?.env ?? {};
+  const env = configuration && configuration.env ? configuration.env : {};
 
   return (
     <div>
@@ -63,9 +63,9 @@ export const ConfigurationPage = () => {
       <span>
         <Translate contentKey="configuration.filter">Filter</Translate>
       </span>{' '}
-      <Input type="search" value={filter} onChange={changeFilter} name="search" id="search" />
+      <Input.Search type="search" value={filter} onChange={changeFilter} name="search" id="search" />
       <label>Spring configuration</label>
-      <Table className="table table-striped table-bordered table-responsive d-table">
+      <table className="table table-striped table-bordered table-responsive d-table">
         <thead>
           <tr>
             <th onClick={changeReversePrefix}>
@@ -88,7 +88,7 @@ export const ConfigurationPage = () => {
                         <Row key={index}>
                           <Col md="4">{propKey}</Col>
                           <Col md="8">
-                            <Badge className="float-end bg-secondary break">{JSON.stringify(property['properties'][propKey])}</Badge>
+                            <Tag className="float-right badge-secondary break">{JSON.stringify(property['properties'][propKey])}</Tag>
                           </Col>
                         </Row>
                       ))}
@@ -97,14 +97,14 @@ export const ConfigurationPage = () => {
                 ))
             : null}
         </tbody>
-      </Table>
+      </table>
       {env.propertySources
         ? env.propertySources.map((envKey, envIndex) => (
             <div key={envIndex}>
               <h4>
                 <span>{envKey.name}</span>
               </h4>
-              <Table className="table table-sm table-striped table-bordered table-responsive d-table">
+              <table className="table table-sm table-striped table-bordered table-responsive d-table">
                 <thead>
                   <tr key={envIndex}>
                     <th className="w-40">Property</th>
@@ -118,12 +118,12 @@ export const ConfigurationPage = () => {
                       <tr key={propIndex}>
                         <td className="break">{propKey}</td>
                         <td className="break">
-                          <span className="float-end badge bg-secondary break">{envKey.properties[propKey].value}</span>
+                          <span className="float-right badge badge-secondary break">{envKey.properties[propKey].value}</span>
                         </td>
                       </tr>
                     ))}
                 </tbody>
-              </Table>
+              </table>
             </div>
           ))
         : null}

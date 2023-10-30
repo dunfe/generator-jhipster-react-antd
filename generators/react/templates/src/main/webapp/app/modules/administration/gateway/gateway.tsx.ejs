@@ -19,7 +19,7 @@
 import React, { useEffect } from 'react';
 import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Badge, Table, Button } from 'reactstrap';
+import { Tag, Button } from 'antd';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getGatewayRoutes } from '../administration.reducer';
@@ -38,10 +38,10 @@ export const GatewayPage = () => {
     Object.keys(instance).map((key, index) => {
       spans.push((
         <span key={key.toString() + 'value'}>
-          <Badge key={key.toString() + '-containerbadge'} className="fw-normal">
-            <Badge key={key.toString() + '-badge'} color="info" className="fw-normal" pill>{key}</Badge>
+          <Tag key={key.toString() + '-containerbadge'} className="font-weight-normal">
+            <Tag key={key.toString() + '-badge'} color="info" className="font-weight-normal" pill>{key}</Tag>
             {instance[key]}
-          </Badge>
+          </Tag>
         </span>
       ));
     });
@@ -52,19 +52,19 @@ export const GatewayPage = () => {
     if (info) {
       <%_ if (serviceDiscoveryConsul) { _%>
       if (info.checks && info.checks.filter(check => check.status === 'PASSING').length === info.checks.length) {
-        return <Badge color="success">UP</Badge>;
+        return <Tag color="success">UP</Tag>;
       } else {
-        return <Badge color="danger">DOWN</Badge>;
+        return <Tag color="danger">DOWN</Tag>;
       }
       <%_ } else { _%>
       if (info.status === 'UP') {
-        return <Badge color="success">{info.status}</Badge>;
+        return <Tag color="success">{info.status}</Tag>;
       } else {
-        return <Badge color="danger">{info.status}</Badge>;
+        return <Tag color="danger">{info.status}</Tag>;
       }
       <%_ } _%>
     } else {
-      return <Badge color="warning">?</Badge>;
+      return <Tag color="warning">?</Tag>;
     }
   };
 
@@ -95,13 +95,13 @@ export const GatewayPage = () => {
       <div>
         <h2>Gateway</h2>
           <p>
-            <Button onClick={gatewayRoutes} color={isFetching ? 'danger' : 'primary'} disabled={isFetching}>
+            <Button onClick={gatewayRoutes} danger={isFetching} type={'primary'} disabled={isFetching}>
               <FontAwesomeIcon icon="sync" />&nbsp;
               <Translate component="span" contentKey="health.refresh.button">Refresh</Translate>
             </Button>
           </p>
 
-          <Table striped responsive>
+          <table striped responsive>
             <thead>
               <tr key="header">
                 <th><Translate contentKey="gateway.routes.url">URL</Translate></th>
@@ -118,7 +118,7 @@ export const GatewayPage = () => {
               </tr>
             )}
             </tbody>
-          </Table>
+          </table>
 
         </div>
   );

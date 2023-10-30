@@ -17,7 +17,7 @@
  limitations under the License.
 -%>
 import React, { useEffect } from 'react';
-import { Alert, Table, Button } from 'reactstrap';
+import { Alert, Button } from 'antd';
 import { Translate } from 'react-jhipster';
 
 import { getSession } from 'app/shared/reducers/authentication';
@@ -55,25 +55,21 @@ export const SessionsPage = () => {
         </h2>
 
         {(updateSuccess) ? (
-        <Alert color="success">
-          <Translate contentKey="sessions.messages.success">
-            <strong>Session invalidated!</strong>
-          </Translate>
-        </Alert>
+        <Alert message={          <Translate contentKey="sessions.messages.success">
+          <strong>Session invalidated!</strong>
+        </Translate>}/>
         ) : null}
 
         {(updateFailure) ? (
-        <Alert color="danger">
-          <Translate contentKey="sessions.messages.error">
-            <span><strong>An error has occurred!</strong> The session could not be invalidated.</span>
-          </Translate>
-        </Alert>
+        <Alert message={          <Translate contentKey="sessions.messages.error">
+          <span><strong>An error has occurred!</strong> The session could not be invalidated.</span>
+        </Translate>} />
         ) : null}
 
-        <Button color="primary" onClick={refreshList}>Refresh</Button>
+        <Button type="primary" onClick={refreshList}>Refresh</Button>
 
         <div className="table-responsive">
-          <Table className="table-striped">
+          <table className="table-striped">
             <thead>
             <tr>
               <th><Translate contentKey="sessions.table.ipaddress">IP Address</Translate></th>
@@ -97,7 +93,7 @@ export const SessionsPage = () => {
               </tr>
             ))}
             </tbody>
-          </Table>
+          </table>
         </div>
       </div>
   );

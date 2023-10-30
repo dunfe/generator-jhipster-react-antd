@@ -21,7 +21,7 @@ import './app.scss';
 import 'app/config/dayjs';
 
 import React, { useEffect } from 'react';
-import { Card } from 'reactstrap';
+import { Layout } from 'antd';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -34,6 +34,8 @@ import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import ErrorBoundary from 'app/shared/error/error-boundary';
 import { AUTHORITIES } from 'app/config/constants';
 import AppRoutes from 'app/routes';
+import 'antd/dist/antd.css';
+import Sider from 'app/shared/layout/sider/sider';
 
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
 
@@ -54,33 +56,36 @@ export const App = () => {
   const isInProduction = useAppSelector(state => state.applicationProfile.inProduction);
   const isOpenAPIEnabled = useAppSelector(state => state.applicationProfile.isOpenAPIEnabled);
 
-  const paddingTop = '60px';
   return (
-    <BrowserRouter basename={baseHref}>
-      <div className="app-container" style={{ paddingTop }}>
+    <Router basename={baseHref}>
+      <Layout className="app-container">
         <ToastContainer position={toast.POSITION.TOP_LEFT} className="toastify-container" toastClassName="toastify-toast"/>
-        <ErrorBoundary>
-          <Header
-            isAuthenticated={isAuthenticated}
-            isAdmin={isAdmin}
-<%_ if (enableTranslation) { _%>
-            currentLocale={currentLocale}
-<%_ } _%>
-            ribbonEnv={ribbonEnv}
-            isInProduction={isInProduction}
-            isOpenAPIEnabled={isOpenAPIEnabled}
-          />
-        </ErrorBoundary>
-        <div className="container-fluid view-container" id="app-view-container">
-          <Card className="jh-card">
+        {isAdmin ? (
+          <>
+            <ErrorBoundary>
+              <Header />
+            </ErrorBoundary>
+          </>
+        ) : null}
+        <Layout id="app-view-container">
+          {isAuthenticated && isAdmin && (
+            <Sider
+              isAuthenticated={isAuthenticated}
+              isAdmin={isAdmin}
+              currentLocale={currentLocale}
+              ribbonEnv={ribbonEnv}
+              isInProduction={isInProduction}
+              isOpenAPIEnabled={isOpenAPIEnabled}
+            />
+          )}
+          <Layout.Content style={isAdmin ? { padding: '25px 25px' } : null}>
             <ErrorBoundary>
               <AppRoutes/>
             </ErrorBoundary>
-          </Card>
-          <Footer/>
-        </div>
-      </div>
-    </BrowserRouter>
+          </Layout.Content>
+        </Layout>
+      </Layout>
+    </Router>
   );
 };
 

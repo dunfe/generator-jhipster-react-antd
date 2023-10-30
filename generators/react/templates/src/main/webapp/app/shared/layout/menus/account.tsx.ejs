@@ -17,49 +17,71 @@
  limitations under the License.
 -%>
 import React from 'react';
-import MenuItem from 'app/shared/layout/menus/menu-item';
-<%_ if (authenticationTypeOauth2) { _%>
-import { DropdownItem } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-<%_ } _%>
 import { Translate, translate } from 'react-jhipster';
 <%_ if (authenticationTypeOauth2) { _%>
 import { getLoginUrl } from 'app/shared/util/url-utils';
 <%_ } _%>
-import { NavDropdown } from './menu-components';
+import { Menu } from 'antd';
+import { Link } from 'react-router-dom';
+import { LockOutlined, LoginOutlined, LogoutOutlined, SettingOutlined, UserAddOutlined } from '@ant-design/icons';
 
 
-const accountMenuItemsAuthenticated = () => (
-  <>
-<%_ if (generateUserManagement) { _%>
-    <MenuItem icon="wrench" to="/account/settings" data-cy="settings"><Translate contentKey="global.menu.account.settings">Settings</Translate></MenuItem>
-    <MenuItem icon="lock" to="/account/password" data-cy="passwordItem"><Translate contentKey="global.menu.account.password">Password</Translate></MenuItem>
+const accountMenuItemsAuthenticated = [
+<%_ if (!skipUserManagement) { _%>
+  <Menu.Item key="settings" icon={<SettingOutlined />}>
+  <Link to="/account/settings">
+      <Translate contentKey="global.menu.account.settings">Settings</Translate>
+  </Link>
+</Menu.Item>,
+<Menu.Item key="password" icon={<LockOutlined />}>
+  <Link to="/account/password">
+      <Translate contentKey="global.menu.account.password">Password</Translate>
+  </Link>
+</Menu.Item>,
   <%_ if (authenticationTypeSession) { _%>
-    <MenuItem icon="cloud" to="/account/sessions"><Translate contentKey="global.menu.account.sessions">Sessions</Translate></MenuItem>
+    <Menu.Item key="session" icon={<LockOutlined />}>
+  <Link to="/account/sessions">
+      <Translate contentKey="global.menu.account.sessions">Sessions</Translate>
+  </Link>
+</Menu.Item>,
   <%_ } _%>
 <%_ } _%>
-    <MenuItem icon="sign-out-alt" to="/logout" data-cy="logout"><Translate contentKey="global.menu.account.logout">Sign out</Translate></MenuItem>
-  </>
-  );
+<Menu.Item key="signout" icon={<LogoutOutlined />} data-cy="logout">
+<Link to="/logout">
+    <Translate contentKey="global.menu.account.logout">Sign out</Translate>
+</Link>
+</Menu.Item>
+  ];
 
-const accountMenuItems = () => (
-  <>
+const accountMenuItems = [
 <%_ if (!authenticationTypeOauth2) { _%>
-    <MenuItem id="login-item" icon="sign-in-alt" to="/login" data-cy="login"><Translate contentKey="global.menu.account.login">Sign in</Translate></MenuItem>
+  <Menu.Item key="signin" id="login-item" icon={<LoginOutlined />} data-cy="login">
+  <Link to="/login">
+      <Translate contentKey="global.menu.account.login">Sign in</Translate>
+  </Link>
+</Menu.Item>,
 <%_ } else { _%>
-    <DropdownItem id="login-item" tag="a" href={getLoginUrl()} data-cy="login"><FontAwesomeIcon icon="sign-in-alt" /> <Translate contentKey="global.menu.account.login">Sign in</Translate></DropdownItem>
+  <Menu.Item key="signin" id="login-item" icon={<LoginOutlined />} data-cy="login">
+  <Link to={getLoginUrl()}>
+      <Translate contentKey="global.menu.account.login">Sign in</Translate>
+  </Link>
+</Menu.Item>,
 <%_ } _%>
-<%_ if (generateUserManagement) { _%>
-    <MenuItem icon="user-plus" to="/account/register" data-cy="register"><Translate contentKey="global.menu.account.register">Register</Translate></MenuItem>
+<%_ if (!skipUserManagement) { _%>
+  <Menu.Item key="register" icon={<UserAddOutlined />} data-cy="register">
+  <Link to="/account/register">
+      <Translate contentKey="global.menu.account.register">Register</Translate>
+  </Link>
+</Menu.Item>,
 <%_ } _%>
-  </>
-);
+];
 
-export const AccountMenu = ({ isAuthenticated = false }) => (
-  <NavDropdown icon="user" name={translate('global.menu.account.main')} id="account-menu" data-cy="accountMenu">
-    {isAuthenticated && accountMenuItemsAuthenticated()}
-    {!isAuthenticated && accountMenuItems()}
-  </NavDropdown>
-);
+export const AccountMenu = (isAuthenticated) => {
+  if (isAuthenticated) {
+    return accountMenuItemsAuthenticated;
+}
+
+return accountMenuItems;
+};
 
 export default AccountMenu;

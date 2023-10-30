@@ -20,10 +20,10 @@ import './footer.scss';
 
 import React from 'react';
 import { Translate } from 'react-jhipster';
-import { Col, Row } from 'reactstrap';
+import { Layout, Col, Row } from 'antd';
 
-const Footer = () => (
-  <div className="footer page-content">
+const Footer = props => (
+  <Layout.Footer className="footer page-content">
     <Row>
       <Col md="12">
         <p>
@@ -31,7 +31,7 @@ const Footer = () => (
         </p>
       </Col>
     </Row>
-  </div>
+  </Layout.Footer>
 );
 
 export default Footer;

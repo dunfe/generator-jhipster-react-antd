@@ -8,9 +8,9 @@ import { translate<% if (enableTranslation) { %>, Storage<% } %> } from 'react-j
 import LoadingBar from 'react-redux-loading-bar';
 import { Layout, Menu } from 'antd';
 import { Home } from '../header/header-components';
-import { AdminMenu, EntitiesMenu, AccountMenu<%_ if (enableTranslation) { _%>, LocaleMenu<%_ } _%> } from '../menus';
+import { AdminMenu, AccountMenu<%_ if (enableTranslation) { _%>, LocaleMenu<%_ } _%> } from '../menus';
+import EntitiesMenuItems from 'app/entities/menu';
 import { ApartmentOutlined, ClusterOutlined, GlobalOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
-import { languages } from 'app/config/translation';
 
 <%_ if (enableTranslation) { _%>
     import { useAppDispatch } from 'app/config/store';
@@ -50,7 +50,7 @@ const Sider = (props: IHeaderProps) => {
 
       <%_ if (enableTranslation) { _%>
         const dispatch = useAppDispatch();
-      
+
         const handleLocaleChange = event => {
           const langKey = event.target.value;
           Storage.session.set('locale', langKey);
@@ -79,13 +79,13 @@ const Sider = (props: IHeaderProps) => {
                     <Home />
                 </Menu.Item>
                 <SubMenu key="entities" title={translate('global.menu.entities.main')} icon={<ApartmentOutlined />}>
-                    {EntitiesMenu}
+                  <EntitiesMenuItems />
                 </SubMenu>
                 <SubMenu key="admin" title={translate('global.menu.admin.main')} icon={<ClusterOutlined />}>
                     {AdminMenu(props.isOpenAPIEnabled)}
                 </SubMenu>
                 <%_ if (enableTranslation) { _%>
-                <SubMenu key="lang" title={props.currentLocale ? languages[props.currentLocale].name : undefined} icon={<GlobalOutlined />}>
+                <SubMenu key="lang" title="Locale" icon={<GlobalOutlined />}>
                     <LocaleMenu currentLocale={props.currentLocale} />
                 </SubMenu>
                 <%_ } _%>

@@ -16,7 +16,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { clientApplicationTemplatesBlock, clientRootTemplatesBlock, clientSrcTemplatesBlock } from '../client/support/files.mjs';
+import {
+  clientApplicationTemplatesBlock,
+  clientRootTemplatesBlock,
+  clientSrcTemplatesBlock,
+} from 'generator-jhipster/generators/client/support';
 
 export const files = {
   common: [
@@ -306,10 +310,10 @@ export const files = {
   ],
 };
 
-export async function writeFiles({ application }) {
+export async function writeFiles(application) {
   if (!application.clientFrameworkReact) return;
 
-  await this.writeFiles({
+  await writeFiles({
     sections: files,
     context: application,
   });

@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { clientApplicationTemplatesBlock } from '../client/support/files.mjs';
+import { clientApplicationTemplatesBlock } from 'generator-jhipster/generators/client/support/files';
 
 export const reactFiles = {
   client: [

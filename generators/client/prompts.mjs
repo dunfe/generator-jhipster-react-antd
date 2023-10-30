@@ -16,9 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { httpsGet } from '../base/support/index.mjs';
 
-export async function askForClientTheme({ control }) {
+async function askForClientTheme({ control }) {
   if (control.existingProject && !this.options.askAnswered) return;
 
   const config = this.jhipsterConfigWithDefaults;
@@ -27,18 +26,13 @@ export async function askForClientTheme({ control }) {
       type: 'list',
       name: 'clientTheme',
       when: () => ['angular', 'react', 'vue'].includes(config.clientFramework),
-      message: 'Would you like to use a Bootswatch theme (https://bootswatch.com/)?',
+      message: 'This template use Ant Design as UI framework, choose a theme (https://ant.design/docs/react/customize-theme-cn)?',
       choices: async () => {
-        const bootswatchChoices = await retrieveOnlineBootswatchThemes(this).catch(errorMessage => {
-          this.log.warn(errorMessage);
-          return retrieveLocalBootswatchThemes();
-        });
         return [
           {
             value: 'none',
-            name: 'Default JHipster',
+            name: 'Ant Design',
           },
-          ...bootswatchChoices,
         ];
       },
       default: config.clientTheme,
@@ -47,91 +41,4 @@ export async function askForClientTheme({ control }) {
   );
 }
 
-export async function askForClientThemeVariant({ control }) {
-  if (control.existingProject && !this.options.askAnswered) return;
-  if ((this.jhipsterConfig.clientTheme ?? 'none') === 'none') {
-    return;
-  }
-
-  const config = this.jhipsterConfigWithDefaults;
-  await this.prompt(
-    {
-      type: 'list',
-      name: 'clientThemeVariant',
-      when: () => !this.jhipsterConfig.skipClient,
-      message: 'Choose a Bootswatch variant navbar theme (https://bootswatch.com/)?',
-      choices: [
-        { value: 'primary', name: 'Primary' },
-        { value: 'dark', name: 'Dark' },
-        { value: 'light', name: 'Light' },
-      ],
-      default: config.clientThemeVariant,
-    },
-    this.config,
-  );
-}
-
-async function retrieveOnlineBootswatchThemes(generator) {
-  return _retrieveBootswatchThemes(generator, true);
-}
-
-async function retrieveLocalBootswatchThemes(generator) {
-  return _retrieveBootswatchThemes(generator, false);
-}
-
-async function _retrieveBootswatchThemes(generator, useApi) {
-  const errorMessage = 'Could not fetch bootswatch themes from API. Using default ones.';
-  if (!useApi) {
-    return [
-      { value: 'cerulean', name: 'Cerulean' },
-      { value: 'cosmo', name: 'Cosmo' },
-      { value: 'cyborg', name: 'Cyborg' },
-      { value: 'darkly', name: 'Darkly' },
-      { value: 'flatly', name: 'Flatly' },
-      { value: 'journal', name: 'Journal' },
-      { value: 'litera', name: 'Litera' },
-      { value: 'lumen', name: 'Lumen' },
-      { value: 'lux', name: 'Lux' },
-      { value: 'materia', name: 'Materia' },
-      { value: 'minty', name: 'Minty' },
-      { value: 'morph', name: 'Morph' },
-      { value: 'pulse', name: 'Pulse' },
-      { value: 'quartz', name: 'Quartz' },
-      { value: 'sandstone', name: 'Sandstone' },
-      { value: 'simplex', name: 'Simplex' },
-      { value: 'sketchy', name: 'Sketchy' },
-      { value: 'slate', name: 'Slate' },
-      { value: 'solar', name: 'Solar' },
-      { value: 'spacelab', name: 'Spacelab' },
-      { value: 'superhero', name: 'Superhero' },
-      { value: 'united', name: 'United' },
-      { value: 'vapor', name: 'Vapor' },
-      { value: 'yeti', name: 'Yeti' },
-      { value: 'zephyr', name: 'Zephyr' },
-    ];
-  }
-
-  return new Promise((resolve, reject) => {
-    httpsGet(
-      'https://bootswatch.com/api/5.json',
-
-      body => {
-        try {
-          const { themes } = JSON.parse(body);
-
-          const bootswatchChoices = themes.map(theme => ({
-            value: theme.name.toLowerCase(),
-            name: theme.name,
-          }));
-
-          resolve(bootswatchChoices);
-        } catch (err) {
-          reject(errorMessage);
-        }
-      },
-      () => {
-        reject(errorMessage);
-      },
-    );
-  });
-}
+export default askForClientTheme;

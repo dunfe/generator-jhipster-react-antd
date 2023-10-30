@@ -17,23 +17,11 @@
  * limitations under the License.
  */
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
-import { GENERATOR_REACT } from 'generator-jhipster/generators';
 import { writeFiles } from './files-react.mjs';
 
 export default class extends BaseApplicationGenerator {
   constructor(args, opts, features) {
     super(args, opts, { ...features, sbsBlueprint: true });
-  }
-
-  get [BaseApplicationGenerator.LOADING]() {
-    return this.asLoadingTaskGroup({
-      loadPackageJson({ application }) {
-        this.loadNodeDependenciesFromPackageJson(
-          application.nodeDependencies,
-          this.fetchFromInstalledJHipster(GENERATOR_REACT, 'resources', 'package.json'),
-        );
-      },
-    });
   }
 
   get [BaseApplicationGenerator.WRITING]() {

@@ -1,5 +1,5 @@
 <%#
- Copyright 2013-2023 the original author or authors from the JHipster project.
+ Copyright 2013-2021 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -17,10 +17,9 @@
  limitations under the License.
 -%>
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams  } from 'react-router-dom';
 import { Button, Card, Typography, Form, Input, Checkbox, Select, Space } from 'antd';
-import { Translate, translate, ValidatedField, ValidatedForm, isEmail } from 'react-jhipster';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Translate, translate } from 'react-jhipster';
 
 <%_ if (enableTranslation) { _%>
 import { locales, languages } from 'app/config/translation';
@@ -28,175 +27,185 @@ import { locales, languages } from 'app/config/translation';
 import { getUser, getRoles, updateUser, createUser, reset } from './user-management.reducer';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
+const { Title } = Typography;
 export const UserManagementUpdate = () => {
-  const dispatch = useAppDispatch();
-
-  const navigate = useNavigate();
-
   const { login } = useParams<'login'>();
   const isNew = login === undefined;
+    const dispatch = useAppDispatch();
+    const [form] = Form.useForm();
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isNew) {
-      dispatch(reset());
-    } else {
-      dispatch(getUser(login));
-    }
-    dispatch(getRoles());
-    return () => {
-      dispatch(reset());
+    useEffect(() => {
+      if (isNew) {
+        dispatch(reset());
+      } else {
+        dispatch(getUser(login));
+      }
+      dispatch(getRoles());
+      return () => {
+        dispatch(reset());
+      };
+    }, [login]);
+
+    const handleClose = () => {
+      navigate('/admin/user-management');
     };
-  }, [login]);
 
-  const handleClose = () => {
-    navigate('/admin/user-management');
-  };
-
-  const saveUser = values => {
-    if (isNew) {
-      dispatch(createUser(values));
-    } else {
-      dispatch(updateUser(values));
-    }
-    handleClose();
-  };
-
-  const isInvalid = false;
-  const user = useAppSelector(state => state.userManagement.user);
-  const loading = useAppSelector(state => state.userManagement.loading);
-  const updating = useAppSelector(state => state.userManagement.updating);
-  const authorities = useAppSelector(state => state.userManagement.authorities);
-
-  return (
-    <div>
-      <Row className="justify-content-center">
-        <Col md="8">
-          <h1>
-            <Translate contentKey="userManagement.home.createOrEditLabel">Create or edit a User</Translate>
-          </h1>
-        </Col>
-      </Row>
-      <Row className="justify-content-center">
-        <Col md="8">
-        { loading ? <p>Loading...</p>
-        : <ValidatedForm onSubmit={saveUser} defaultValues={user}>
-          {user.id ? (
-            <ValidatedField
-              type="text"
-              name="id"
-              required
-              readOnly
-              label={translate('global.field.id')}
-              validate={{ required: true }}
-            />
-          ) : null}
-          <ValidatedField
-            type="text"
-            name="login"
-            label={translate('userManagement.login')}
-            validate={{
-              required: {
-                value: true,
-                message: translate('register.messages.validate.login.required'),
-              },
-              pattern: {
-                value: /<%- webappLoginRegExp %>/,
-                message: translate('register.messages.validate.login.pattern'),
-              },
-              minLength: {
-                value: 1,
-                message: translate('register.messages.validate.login.minlength'),
-              },
-              maxLength: {
-                value: 50,
-                message: translate('register.messages.validate.login.maxlength'),
-              },
-            }}
-          />
-          <ValidatedField
-            type="text"
-            name="firstName"
-            label={translate('userManagement.firstName')}
-            validate={{
-              maxLength: {
-                value: 50,
-                message: translate('entity.validation.maxlength', { max: 50 }),
-              },
-            }}
-          />
-          <ValidatedField
-            type="text"
-            name="lastName"
-            label={translate('userManagement.lastName')}
-            validate={{
-              maxLength: {
-                value: 50,
-                message: translate('entity.validation.maxlength', { max: 50 }),
-              },
-            }}
-          />
-          <FormText>This field cannot be longer than 50 characters.</FormText>
-          <ValidatedField
-            name="email"
-            label={translate('global.form.email.label')}
-            placeholder={translate('global.form.email.placeholder')}
-            type="email"
-            validate={{
-              required: {
-                value: true,
-                message: translate('global.messages.validate.email.required'),
-              },
-              minLength: {
-                value: 5,
-                message: translate('global.messages.validate.email.minlength'),
-              },
-              maxLength: {
-                value: 254,
-                message: translate('global.messages.validate.email.maxlength'),
-              },
-              validate: v => isEmail(v) || translate('global.messages.validate.email.invalid'),
-            }}
-          />
-          <ValidatedField
-            type="checkbox"
-            name="activated"
-            check
-            value={true}
-            disabled={!user.id}
-            label={translate('userManagement.activated')}
-          />
-<%_ if (enableTranslation) { _%>
-          <ValidatedField type="select" name="langKey" label={translate('userManagement.langKey')}>
-            {locales.map(locale => (
-              <option value={locale} key={locale}>
-                {languages[locale].name}
-              </option>
-            ))}
-          </ValidatedField>
-<%_ } _%>
-          <ValidatedField type="select" name="authorities" multiple label={translate('userManagement.profiles')}>
-            {authorities.map(role => (
-              <option value={role} key={role}>
-                {role}
-              </option>
-            ))}
-          </ValidatedField>
-          <Button tag={Link} to="/admin/user-management" replace color="info">
-            <FontAwesomeIcon icon="arrow-left" />&nbsp;
-            <span className="d-none d-md-inline">
-              <Translate contentKey="entity.action.back">Back</Translate>
-            </span>
-          </Button>
-          &nbsp;
-          <Button color="primary" type="submit" disabled={isInvalid || updating}>
-            <FontAwesomeIcon icon="save" />&nbsp;
-            <Translate contentKey="entity.action.save">Save</Translate>
-          </Button>
-        </ValidatedForm>
+    const saveUser = values => {
+        if (isNew) {
+            dispatch(createUser(values));
+        } else {
+            dispatch(updateUser(values));
         }
-        </Col>
-      </Row>
-    </div>
+        handleClose();
+    };
+
+    const isInvalid = false;
+    const user = useAppSelector(state => state.userManagement.user);
+    const loading = useAppSelector(state => state.userManagement.loading);
+    const updating = useAppSelector(state => state.userManagement.updating);
+    const authorities = useAppSelector(state => state.userManagement.authorities);
+
+    const onFinish = () => {
+        form.validateFields()
+            .then(values => saveUser(values))
+            .catch(error => console.error(error));
+    };
+    <%_ if (enableTranslation) { _%>
+    const options = locales.map(locale => {
+        return {
+            label: languages[locale].name,
+            value: locale,
+        };
+    });
+    <% } %>
+
+    const profiles = authorities.map(role => {
+        return {
+            label: role,
+            value: role,
+        };
+    });
+
+    return (
+      <Card>
+          <Title>
+              <Translate contentKey="userManagement.home.createOrEditLabel">Create or edit a User</Translate>
+          </Title>
+          {loading ? (
+              <p>Loading...</p>
+          ) : (
+              <Form form={form} layout={'vertical'} initialValues={user}>
+                  {user.id ? (
+                      <Form.Item
+                          name="id"
+                          rules={[
+                              {
+                                  required: true,
+                              },
+                          ]}
+                          required
+                          label={translate('global.field.id')}
+                      >
+                          <Input readOnly />
+                      </Form.Item>
+                  ) : null}
+                  <Form.Item
+                      name="login"
+                      label={translate('userManagement.login')}
+                      rules={[
+                          {
+                              required: true,
+                              message: translate('register.messages.validate.login.required'),
+                          },
+                          {
+                              min: 1,
+                              message: translate('register.messages.validate.login.minlength'),
+                          },
+                          {
+                              max: 50,
+                              message: translate('register.messages.validate.login.maxlength'),
+                          },
+                      ]}
+                  >
+                      <Input />
+                  </Form.Item>
+                  <Form.Item
+                      name="firstName"
+                      label={translate('userManagement.firstName')}
+                      rules={[
+                          {
+                              max: 50,
+                              message: translate('entity.validation.maxlength'),
+                          },
+                      ]}
+                  >
+                      <Input />
+                  </Form.Item>
+                  <Form.Item
+                      name="lastName"
+                      label={translate('userManagement.lastName')}
+                      rules={[
+                          {
+                              max: 50,
+                              message: translate('entity.validation.maxlength'),
+                          },
+                      ]}
+                  >
+                      <Input />
+                  </Form.Item>
+                  <Form.Item
+                      name="email"
+                      label={translate('global.form.email.label')}
+                      rules={[
+                          {
+                              required: true,
+                              message: translate('global.messages.validate.email.required'),
+                          },
+                          {
+                              min: 5,
+                              message: translate('settings.messages.validate.lastname.minlength'),
+                          },
+                          {
+                              max: 254,
+                              message: translate('settings.messages.validate.email.maxlength'),
+                          },
+                          {
+                              type: 'email',
+                              message: translate('global.messages.validate.email.invalid'),
+                          },
+                      ]}
+                  >
+                      <Input placeholder={translate('global.form.email.placeholder')} />
+                  </Form.Item>
+                  <Form.Item name="activated" label={translate('userManagement.activated')}>
+                      <Checkbox checked value={true} disabled={!user.id} />
+                  </Form.Item>
+                  <%_ if (enableTranslation) { _%>
+                  <Form.Item id="langKey" name="langKey" label={translate('settings.form.language')} data-cy="langKey">
+                      <Select id="langKey" options={options} />
+                  </Form.Item>
+                  <%_ } _%>
+                  <Form.Item name="authorities" label={translate('userManagement.profiles')}>
+                      <Select id="authorities" options={profiles} mode="multiple" />
+                  </Form.Item>
+                  <Form.Item>
+                      <Space direction="vertical">
+                          <Button type="primary" onClick={onFinish} disabled={isInvalid || updating}>
+                              <Translate contentKey="entity.action.save">Save</Translate>
+                          </Button>
+                          <Button type="link">
+                              <Link to="/admin/user-management">
+                                  <span className="d-none d-md-inline">
+                                      <Translate contentKey="entity.action.back">Cancel</Translate>
+                                  </span>
+                              </Link>
+                          </Button>
+                      </Space>
+                  </Form.Item>
+              </Form>
+          )}
+      </Card>
   );
 };
 

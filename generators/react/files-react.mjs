@@ -210,6 +210,7 @@ export const files = {
         'shared/layout/menus/menu-components.tsx',
         'shared/layout/menus/menu-item.tsx',
         'shared/layout/password/password-strength-bar.tsx',
+        'shared/layout/sider/sider.tsx',
         // util
         'shared/util/date-utils.ts',
         'shared/util/pagination.constants.ts',

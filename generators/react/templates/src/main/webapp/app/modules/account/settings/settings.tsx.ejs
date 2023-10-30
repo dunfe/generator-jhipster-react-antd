@@ -59,13 +59,14 @@ export const SettingsPage = () => {
       })
     );
   };
-
+  <%_ if (enableTranslation) { _%>
   const options = locales.map(locale => {
     return {
       label: languages[locale].name,
       value: locale,
     };
   });
+  <%_ } _%>
 
   return (
     <div>
@@ -143,9 +144,11 @@ export const SettingsPage = () => {
             >
               <Input placeholder={translate('global.form.email.placeholder')} />
             </Form.Item>
+            <%_ if (enableTranslation) { _%>
             <Form.Item id="langKey" name="langKey" label={translate('settings.form.language')} data-cy="langKey">
               <Select id="langKey" options={options} />
             </Form.Item>
+            <%_ } _%>
             <Form.Item>
               <Button type="primary" htmlType="submit">
                 <Translate contentKey="settings.form.button">Save</Translate>

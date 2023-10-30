@@ -131,7 +131,7 @@ export const UserManagement = () => {
           </Link>
         </div>
       </h2>
-      <Table responsive striped>
+      <Table>
         <thead>
           <tr>
             <th className="hand" onClick={sort('id')}><Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('id')} /></th>
@@ -159,8 +159,8 @@ export const UserManagement = () => {
           users.map((user, i) => (
             <tr id={user.login} key={`user-${i}`}>
               <td>
-                <Button tag={Link} to={user.login} color="link" size="sm">
-                  {user.id}
+                <Button color="link" size="small">
+                  <Link to={user.login}>{user.id}</Link>
                 </Button>
               </td>
               <td>{user.login}</td>
@@ -184,7 +184,7 @@ export const UserManagement = () => {
                   user.authorities ? (
                   user.authorities.map((authority, j) => (
                     <div key={`user-auth-${i}-${j}`}>
-                      <Badge color="info">{authority}</Badge>
+                      <Tag color="info">{authority}</Tag>
                     </div>
                   ))) : null
                 }
@@ -202,14 +202,20 @@ export const UserManagement = () => {
 <%_ } _%>
               <td className="text-end">
                 <div className="btn-group flex-btn-group-container">
-                  <Button tag={Link} to={user.login} color="info" size="sm">
-                    <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline"><Translate contentKey="entity.action.view">View</Translate></span>
+                  <Button color="info" size="small">
+                    <Link to={`${user.login}`}>
+                      <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline"><Translate contentKey="entity.action.view">View</Translate></span>
+                    </Link>
                   </Button>
-                  <Button tag={Link} to={`${user.login}/edit`} color="primary" size="sm">
-                    <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline"><Translate contentKey="entity.action.edit">Edit</Translate></span>
+                  <Button  color="primary" size="small">
+                    <Link to={`${user.login}/edit`}>
+                      <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline"><Translate contentKey="entity.action.edit">Edit</Translate></span>
+                    </Link>
                   </Button>
-                  <Button tag={Link} to={`${user.login}/delete`} color="danger" size="sm" disabled={account.login === user.login}>
-                    <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline"><Translate contentKey="entity.action.delete">Delete</Translate></span>
+                  <Button color="danger" size="small" disabled={account.login === user.login}>
+                    <Link to={`${user.login}/delete`}>
+                      <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline"><Translate contentKey="entity.action.delete">Delete</Translate></span>
+                    </Link>
                   </Button>
                 </div>
               </td>

@@ -1,0 +1,29 @@
+import React from "react";
+import { Translate } from "react-jhipster";
+import { Link } from "react-router-dom";
+
+interface IMenuItemObject {
+  routerName: string,
+  enableTranslation: string,
+  entityTranslationKeyMenu: string,
+  entityTranslationValue: string,
+}
+
+const entitiesMenuItems = () => {
+  const items: IMenuItemObject[] = [
+    // jhipster-needle-add-entity-to-menu-items - JHipster will add entities to the menu here
+  ];
+  const filtered = items.filter(item => item !== null && item !== undefined && Object.keys(item).length >= 0);
+  return filtered.map(item => {
+      return {
+        label: (
+          <Link to={`/${item.routerName}`}>
+            {item.enableTranslation ? <Translate contentKey={`global.menu.entities.${item.entityTranslationKeyMenu}`} /> : item.entityTranslationValue}
+          </Link>
+        ),
+        key: item.routerName,
+      }
+  });
+};
+
+export default entitiesMenuItems;

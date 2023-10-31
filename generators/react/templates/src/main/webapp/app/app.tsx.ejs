@@ -21,7 +21,7 @@ import './app.scss';
 import 'app/config/dayjs';
 
 import React, { useEffect } from 'react';
-import { Layout } from 'antd';
+import { Layout, Card } from 'antd';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -29,11 +29,11 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
 import { getProfile } from 'app/shared/reducers/application-profile';
 import Header from 'app/shared/layout/header/header';
+import Footer from 'app/shared/layout/footer/footer';
 import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import ErrorBoundary from 'app/shared/error/error-boundary';
 import { AUTHORITIES } from 'app/config/constants';
 import AppRoutes from 'app/routes';
-import Sider from 'app/shared/layout/sider/sider';
 
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
 
@@ -58,32 +58,28 @@ export const App = () => {
     <BrowserRouter basename={baseHref}>
       <Layout className="app-container">
         <ToastContainer position={toast.POSITION.TOP_LEFT} className="toastify-container" toastClassName="toastify-toast"/>
-        {isAdmin ? (
-          <>
-            <ErrorBoundary>
-              <Header />
-            </ErrorBoundary>
-          </>
-        ) : null}
-        <Layout id="app-view-container">
-          {isAuthenticated && isAdmin && (
-            <Sider
-              isAuthenticated={isAuthenticated}
-              isAdmin={isAdmin}
-              <%_ if (enableTranslation) { _%>
-                currentLocale={currentLocale}
-              <%_ } _%>
-              ribbonEnv={ribbonEnv}
-              isInProduction={isInProduction}
-              isOpenAPIEnabled={isOpenAPIEnabled}
-            />
-          )}
-          <Layout.Content style={isAdmin ? { padding: '25px 25px' } : null}>
-            <ErrorBoundary>
-              <AppRoutes/>
-            </ErrorBoundary>
+        <ErrorBoundary>
+          <Header
+            isAuthenticated={isAuthenticated}
+            isAdmin={isAdmin}
+          <%_ if (enableTranslation) { _%>
+                      currentLocale={currentLocale}
+          <%_ } _%>
+            ribbonEnv={ribbonEnv}
+            isInProduction={isInProduction}
+            isOpenAPIEnabled={isOpenAPIEnabled}
+          />
+        </ErrorBoundary>
+        <div id="app-view-container">
+          <Layout.Content>
+            <Card className="jh-card">
+              <ErrorBoundary>
+                <AppRoutes/>
+              </ErrorBoundary>
+            </Card>
           </Layout.Content>
-        </Layout>
+          <Footer />
+        </div>
       </Layout>
     </BrowserRouter>
   );

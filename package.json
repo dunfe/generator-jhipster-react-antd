@@ -29,7 +29,9 @@
     "vitest": "vitest"
   },
   "dependencies": {
-    "generator-jhipster": "8.0.0-rc.1"
+    "chalk": "^5.3.0",
+    "generator-jhipster": "8.0.0-rc.1",
+    "lodash-es": "^4.17.21"
   },
   "devDependencies": {
     "ejs-lint": "2.0.0",

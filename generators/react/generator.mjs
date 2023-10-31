@@ -17,6 +17,10 @@
  * limitations under the License.
  */
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
+import { stripMargin } from 'generator-jhipster/generators/base/support';
+import * as _ from 'lodash-es';
+import chalk from 'chalk';
+
 import {
   clientApplicationTemplatesBlock,
   clientRootTemplatesBlock,
@@ -83,7 +87,7 @@ export const files = {
   reactEntities: [
     {
       ...clientApplicationTemplatesBlock(),
-      templates: ['entities/reducers.ts', 'entities/menu.tsx', 'entities/routes.tsx'],
+      templates: ['entities/reducers.ts', 'entities/menu.tsx', 'entities/items.tsx', 'entities/routes.tsx'],
     },
   ],
   reactMain: [
@@ -326,5 +330,48 @@ export default class extends BaseApplicationGenerator {
         });
       },
     });
+  }
+
+  get [BaseApplicationGenerator.POST_WRITING_ENTITIES]() {
+    return this.asPostWritingEntitiesTaskGroup({
+      async postWriteEntitiesFiles({ application, entities }) {
+        for (const entity of entities.filter(entity => !entity.skipClient && !entity.builtIn)) {
+          if (!entity.embedded) {
+            this.addEntityToMenuItems(
+              entity.entityPage,
+              application.enableTranslation,
+              entity.entityTranslationKeyMenu,
+              entity.entityClassHumanized,
+            );
+          }
+        }
+      },
+    });
+  }
+
+  addEntityToMenuItems(
+    routerName,
+    enableTranslation,
+    entityTranslationKeyMenu = _.camelCase(routerName),
+    entityTranslationValue = _.startCase(routerName),
+  ) {
+    const errorMessage = `${chalk.yellow('Reference to ') + routerName} ${chalk.yellow('not added to menu.\n')}`;
+    const entityMenuPath = `${this.needleApi.clientReact.clientSrcDir}app/entities/items.tsx`;
+
+    const entityEntry = stripMargin(`
+      {
+        routerName: "${routerName}",
+        enableTranslation: "${enableTranslation}",
+        entityTranslationKeyMenu: "${entityTranslationKeyMenu}",
+        entityTranslationValue: "${entityTranslationValue}",
+      },
+    `);
+    const rewriteFileModel = this.needleApi.clientReact.generateFileModel(
+      entityMenuPath,
+      'jhipster-needle-add-entity-to-menu-items',
+      entityEntry,
+    );
+
+    this.needleApi.clientReact.addBlockContentToFile(rewriteFileModel, errorMessage);
   }
 }

@@ -24,71 +24,104 @@ import { ExceptionOutlined, FileDoneOutlined, HeartOutlined, PieChartOutlined, S
 
 const adminMenuItems = [
 <%_ if (applicationTypeGateway && serviceDiscoveryType) { _%>
-  <Menu.Item key="user-management" icon={<UserOutlined />}>
-  <Link to="/admin/gateway">
-      <Translate contentKey="global.menu.admin.gateway">Gateway</Translate>
-  </Link>
-</Menu.Item>,
+  {
+    label: (
+      <Link to="/admin/gateway">
+        <Translate contentKey="global.menu.admin.gateway">Gateway</Translate>
+      </Link>
+    ),
+    key: 'gateway',
+    icon: <UserOutlined />,
+  },
 <%_ } _%>
 <%_ if (!skipUserManagement) { _%>
-  <Menu.Item key="user-management" icon={<UserOutlined />}>
-  <Link to="/admin/user-management">
-      <Translate contentKey="global.menu.admin.userManagement">User management</Translate>
-  </Link>
-</Menu.Item>,
+  {
+    label: (
+      <Link to="/admin/user-management">
+        <Translate contentKey="global.menu.admin.userManagement">User management</Translate>
+    </Link>
+    ),
+    key: 'user-management',
+    icon: <UserOutlined />,
+  },
 <%_ } _%>
 <%_ if (communicationSpringWebsocket) { _%>
-  <Menu.Item key="user-management" icon={<UserOutlined />}>
-  <Link to="/admin/tracker">
-      <Translate contentKey="global.menu.admin.tracker">User tracker</Translate>
-  </Link>
-</Menu.Item>,
+  {
+    label: (
+      <Link to="/admin/tracker">
+        <Translate contentKey="global.menu.admin.tracker">User tracker</Translate>
+    </Link>
+    ),
+    key: 'tracker',
+    icon: <UserOutlined />,
+  },
 <%_ } _%>
 <%_ if (withAdminUi) { _%>
-  <Menu.Item key="metrics" icon={<PieChartOutlined />}>
-  <Link to="/admin/metrics">
-      <Translate contentKey="global.menu.admin.metrics">Metrics</Translate>
-  </Link>
-</Menu.Item>,
-<Menu.Item key="health" icon={<HeartOutlined />}>
-  <Link to="/admin/health">
-      <Translate contentKey="global.menu.admin.health">Health</Translate>
-  </Link>
-</Menu.Item>,
-<Menu.Item key="configuration" icon={<SettingOutlined />}>
-  <Link to="/admin/configuration">
-      <Translate contentKey="global.menu.admin.configuration">Configuration</Translate>
-  </Link>
-</Menu.Item>,
-<Menu.Item key="logs" icon={<ExceptionOutlined />}>
-  <Link to="/admin/logs">
-      <Translate contentKey="global.menu.admin.logs">Logs</Translate>
-  </Link>
-</Menu.Item>,
-
+  {
+    label: (
+      <Link to="/admin/metrics">
+        <Translate contentKey="global.menu.admin.metrics">Metrics</Translate>
+    </Link>
+    ),
+    key: 'metrics',
+    icon: <UserOutlined />,
+  },
+  {
+    label: (
+      <Link to="/admin/health">
+        <Translate contentKey="global.menu.admin.health">Health</Translate>
+    </Link>
+    ),
+    key: 'health',
+    icon: <UserOutlined />,
+  },
+  {
+    label: (
+      <Link to="/admin/configuration">
+        <Translate contentKey="global.menu.admin.configuration">Configuration</Translate>
+    </Link>
+    ),
+    key: 'configuration',
+    icon: <SettingOutlined />,
+  },
+  {
+    label: (
+      <Link to="/admin/logs">
+        <Translate contentKey="global.menu.admin.logs">Logs</Translate>
+    </Link>
+    ),
+    key: 'logs',
+    icon: <ExceptionOutlined />,
+  },
 <%_ } _%>
 <% if (devDatabaseTypeH2Any) { %>
-  <Menu.Item key="docs" icon={<FileDoneOutlined />}>
-  <Link to="<% if (reactive) { %>http://localhost:8092/<% } else { %>./h2-console/<% } %>">
-      <Translate contentKey="global.menu.admin.database">Database</Translate>
-  </Link>
-</Menu.Item>
+  {
+    label: (
+      <Link to="<% if (reactive) { %>http://localhost:8092/<% } else { %>./h2-console/<% } %>">
+        <Translate contentKey="global.menu.admin.database">Database</Translate>
+    </Link>
+    ),
+    key: 'docs',
+    icon: <FileDoneOutlined />,
+  },
 <%_ } _%>
   ];
 
-const openAPIItem = (
-  <Menu.Item key="docs" icon={<FileDoneOutlined />}>
-  <Link to="/admin/docs">
+const openAPIItem = {
+  label: (
+    <Link to="/admin/docs">
       <Translate contentKey="global.menu.admin.apidocs">API</Translate>
   </Link>
-</Menu.Item>
-);
+  ),
+  key: 'docs',
+  icon: <FileDoneOutlined />,
+};
 
-export const AdminMenu = (showOpenAPI) => {
+export const adminMenu = (showOpenAPI) => {
       if (showOpenAPI) {
         return [...adminMenuItems, openAPIItem];
       }
     return adminMenuItems;
 };
 
-export default AdminMenu;
+export default adminMenu;

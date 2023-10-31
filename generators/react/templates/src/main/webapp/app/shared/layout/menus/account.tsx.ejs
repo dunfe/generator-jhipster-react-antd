@@ -28,55 +28,83 @@ import { LockOutlined, LoginOutlined, LogoutOutlined, SettingOutlined, UserAddOu
 
 const accountMenuItemsAuthenticated = [
 <%_ if (!skipUserManagement) { _%>
-  <Menu.Item key="settings" icon={<SettingOutlined />}>
-  <Link to="/account/settings">
-      <Translate contentKey="global.menu.account.settings">Settings</Translate>
-  </Link>
-</Menu.Item>,
-<Menu.Item key="password" icon={<LockOutlined />}>
-  <Link to="/account/password">
-      <Translate contentKey="global.menu.account.password">Password</Translate>
-  </Link>
-</Menu.Item>,
+  {
+    label: (
+      <Link to="/account/settings">
+        <Translate contentKey="global.menu.admin.settings">Settings</Translate>
+      </Link>
+    ),
+    key: 'settings',
+    icon: <SettingOutlined />,
+  },
+  {
+    label: (
+      <Link to="/account/password">
+        <Translate contentKey="global.menu.admin.password">Password</Translate>
+      </Link>
+    ),
+    key: 'password',
+    icon: <LockOutlined />,
+  },
   <%_ if (authenticationTypeSession) { _%>
-    <Menu.Item key="session" icon={<LockOutlined />}>
-  <Link to="/account/sessions">
-      <Translate contentKey="global.menu.account.sessions">Sessions</Translate>
-  </Link>
-</Menu.Item>,
+    {
+      label: (
+        <Link to="/account/session">
+          <Translate contentKey="global.menu.admin.sessions">Sessions</Translate>
+        </Link>
+      ),
+      key: 'session',
+      icon: <LockOutlined />,
+    },
   <%_ } _%>
 <%_ } _%>
-<Menu.Item key="signout" icon={<LogoutOutlined />} data-cy="logout">
-<Link to="/logout">
-    <Translate contentKey="global.menu.account.logout">Sign out</Translate>
-</Link>
-</Menu.Item>
+    {
+      label: (
+        <Link to="/logout">
+          <Translate contentKey="global.menu.admin.logout">Sign out</Translate>
+        </Link>
+      ),
+      key: 'signout',
+      icon: <LogoutOutlined />,
+    },
   ];
 
 const accountMenuItems = [
 <%_ if (!authenticationTypeOauth2) { _%>
-  <Menu.Item key="signin" id="login-item" icon={<LoginOutlined />} data-cy="login">
-  <Link to="/login">
-      <Translate contentKey="global.menu.account.login">Sign in</Translate>
-  </Link>
-</Menu.Item>,
+  {
+    label: (
+      <Link to="/login">
+        <Translate contentKey="global.menu.account.login">Sign in</Translate>
+    </Link>
+    ),
+    key: 'login',
+    icon: <LoginOutlined />,
+  },
 <%_ } else { _%>
-  <Menu.Item key="signin" id="login-item" icon={<LoginOutlined />} data-cy="login">
-  <Link to={getLoginUrl()}>
-      <Translate contentKey="global.menu.account.login">Sign in</Translate>
-  </Link>
-</Menu.Item>,
+  {
+    label: (
+      <Link to={getLoginUrl()}>
+        <Translate contentKey="global.menu.account.login">Sign in</Translate>
+    </Link>
+    ),
+    key: 'signin',
+    icon: <LoginOutlined />,
+  },
 <%_ } _%>
 <%_ if (!skipUserManagement) { _%>
-  <Menu.Item key="register" icon={<UserAddOutlined />} data-cy="register">
-  <Link to="/account/register">
-      <Translate contentKey="global.menu.account.register">Register</Translate>
-  </Link>
-</Menu.Item>,
+  {
+    label: (
+      <Link to="/account/register">
+        <Translate contentKey="global.menu.account.register">Register</Translate>
+    </Link>
+    ),
+    key: 'register',
+    icon: <LoginOutlined />,
+  },
 <%_ } _%>
 ];
 
-export const AccountMenu = (isAuthenticated) => {
+export const accountMenu = (isAuthenticated) => {
   if (isAuthenticated) {
     return accountMenuItemsAuthenticated;
 }
@@ -84,4 +112,4 @@ export const AccountMenu = (isAuthenticated) => {
 return accountMenuItems;
 };
 
-export default AccountMenu;
+export default accountMenu;
